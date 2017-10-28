@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<XmlTestRoot xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <classA>
+    <a>1234</a>
+    <b>5678</b>
+  </classA>
+  <classB>
+    <XmlTestClassB>
+      <v>
+        <x>0.1</x>
+        <y>0.2</y>
+        <z>0.3</z>
+      </v>
+      <q>
+        <x>0.1276794</x>
+        <y>0.1448781</y>
+        <z>0.2392983</z>
+        <w>0.9515485</w>
+      </q>
+      <mat>
+        <m00>1</m00>
+        <m10>0</m10>
+        <m20>0</m20>
+        <m30>0</m30>
+        <m01>0</m01>
+        <m11>1</m11>
+        <m21>0</m21>
+        <m31>0</m31>
+        <m02>0</m02>
+        <m12>0</m12>
+        <m22>1</m22>
+        <m32>0</m32>
+        <m03>0</m03>
+        <m13>0</m13>
+        <m23>0</m23>
+        <m33>1</m33>
+      </mat>
+    </XmlTestClassB>
+  </classB>
+  <objectC name="SettingXmlSerializerTest" typeName="UnityEditor.MonoScript" assetPath="Assets/EditorExtensions/Samples/Editor/SettingXmlSerializerTest.cs" relativeAssetPath="SettingXmlSerializerTest.cs" guid="9fc1c962791ec9a47b0455edea1c6c40" />
+</XmlTestRoot>
