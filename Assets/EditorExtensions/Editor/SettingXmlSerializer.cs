@@ -16,7 +16,7 @@ public static class SettingXmlSerializer
 	{
 		public string rootDirectory; // root directory for the serialization target.
 		public Transform rootTransform; // root transform for the serialization target.
-		public Dictionary<int, UnityEngine.Object> objectMap; // If this value is null, all meta:instanceID are removed in xml.
+		public List<UnityEngine.Object> objects; // If this value is null, all meta:extraDataObjectIndex are removed in xml.
 	}
 
 	static class AssetPathHelper
@@ -121,7 +121,7 @@ public static class SettingXmlSerializer
 	{
 		public string name;
 		public string typeName;
-		public int instanceID; // for objectMap only.
+		public int extraDataObjectIndex; // for extraData.objects only.
 		public string assetPath;
 		public string guid;
 		public string relativeAssetPath;
@@ -133,7 +133,7 @@ public static class SettingXmlSerializer
 			if( obj != null ) {
 				r.name = obj.name;
 				r.typeName = obj.GetType().FullName;
-				r.instanceID = obj.GetInstanceID();
+				r.extraDataObjectIndex = -1;
 				r.assetPath = UnityEditor.AssetDatabase.GetAssetPath( obj );
 				if( !string.IsNullOrEmpty(r.assetPath) ) {
 					r.guid = UnityEditor.AssetDatabase.AssetPathToGUID( r.assetPath );
@@ -185,10 +185,10 @@ public static class SettingXmlSerializer
 
 		public UnityEngine.Object Find( ExtraData extraData )
 		{
-			if( extraData != null ) {
-				if( extraData.objectMap != null ) {
-					UnityEngine.Object obj;
-					if( extraData.objectMap.TryGetValue( this.instanceID, out obj ) ) {
+			if( this.extraDataObjectIndex >= 0 && extraData != null && extraData.objects != null ) {
+				if( this.extraDataObjectIndex < extraData.objects.Count ) {
+					var obj = extraData.objects[this.extraDataObjectIndex];
+					if( obj != null ) {
 						return obj;
 					}
 				}
@@ -257,8 +257,8 @@ public static class SettingXmlSerializer
 		{
 			writer.WriteAttributeString( "name", null, this.name );
 			writer.WriteAttributeString( "typeName", null, this.typeName );
-			if( extraData != null && extraData.objectMap != null ) {
-				writer.WriteAttributeString( "instanceID", null, this.instanceID.ToString() );
+			if( extraData != null && this.extraDataObjectIndex >= 0 ) {
+				writer.WriteAttributeString( "extraDataObjectIndex", null, this.extraDataObjectIndex.ToString() );
 			}
 			if( !string.IsNullOrEmpty(this.assetPath) ) {
 				writer.WriteAttributeString( "assetPath", null, this.assetPath );
@@ -278,7 +278,9 @@ public static class SettingXmlSerializer
 		{
 			this.name = reader.GetAttribute("name");
 			this.typeName = reader.GetAttribute("typeName");
-			int.TryParse( reader.GetAttribute("instanceID"), out this.instanceID );
+			if( !int.TryParse( reader.GetAttribute("extraDataObjectIndex"), out this.extraDataObjectIndex ) ) {
+				this.extraDataObjectIndex = -1;
+			}
 			this.guid = reader.GetAttribute("guid");
 			this.transformPath = reader.GetAttribute("transformPath");
 			this.assetPath = reader.GetAttribute("assetPath");
@@ -348,10 +350,15 @@ public static class SettingXmlSerializer
 	static void _WriteXmlValue_UnityEngine_Object( XmlWriter writer, object value, ExtraData extraData )
 	{
 		var meta = ObjectMeta.GetAt( (UnityEngine.Object)value, extraData );
-		meta.WriteToXml( writer, extraData );
-		if( extraData != null && extraData.objectMap != null ) {
-			extraData.objectMap.Add( meta.instanceID, (UnityEngine.Object)value );
+		if( extraData != null && extraData.objects != null && value != null ) {
+			meta.extraDataObjectIndex = extraData.objects.IndexOf( (UnityEngine.Object)value );
+			if( meta.extraDataObjectIndex < 0 ) {
+				meta.extraDataObjectIndex = extraData.objects.Count;
+				extraData.objects.Add( (UnityEngine.Object)value );
+			}
 		}
+
+		meta.WriteToXml( writer, extraData );
 	}
 
 	static string _ToString( object value )
