@@ -44,7 +44,7 @@ public class ObjectPostprocessor : AssetPostprocessor
 	public static event GameObjectDuplicatedHandler gameObjectDuplicated;
 
     public delegate void PrefabInstantiatedHandler( string assetPathFrom, GameObject gameObjectTo );
-	public static event PrefabInstantiatedHandler prefabInstanciated;
+	public static event PrefabInstantiatedHandler prefabInstantiated;
 
 	//--------------------------------------------------------------------------------------------------------
 
@@ -123,8 +123,8 @@ public class ObjectPostprocessor : AssetPostprocessor
 	static void _PrefabInstantiated( string assetPathFrom, GameObject gameObjectTo )
 	{
 		DebugLog( "PrefabInstantiated: assetPathFrom: " + assetPathFrom + " gameObjectTo: " + gameObjectTo.name );
-		if( prefabInstanciated != null ) {
-			prefabInstanciated( assetPathFrom, gameObjectTo );
+		if( prefabInstantiated != null ) {
+			prefabInstantiated( assetPathFrom, gameObjectTo );
 		}
 	}
 

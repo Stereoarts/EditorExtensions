@@ -24,7 +24,7 @@ public class ObjectPostprocessorTest
 		ObjectPostprocessor.gameObjectSceneMoved += GameObjectSceneMoved;
 		ObjectPostprocessor.gameObjectDeleted += GameObjectDeleted;
 		ObjectPostprocessor.gameObjectDuplicated += GameObjectDuplicated;
-		ObjectPostprocessor.prefabInstanciated += PrefabInstantiated;
+		ObjectPostprocessor.prefabInstantiated += PrefabInstantiated;
 	}
 
     public static void AssetAdded( string assetPath )
